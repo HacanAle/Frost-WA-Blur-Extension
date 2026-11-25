@@ -1,0 +1,160 @@
+/*
+ * Frost — every blur is plain CSS.
+ *
+ * Chrome injects this file before WhatsApp renders. Rules are switched on by attributes on <html>
+ * (data-frost-*), and strengths come from CSS variables on <html>. frost.js only sets those;
+ * no script looks at, reads or changes WhatsApp's content.
+ *
+ * Selectors avoid WhatsApp's generated class names (._ak8q and friends change with every deploy).
+ * They rely on IDs (#app, #pane-side, #main), ARIA roles and page structure, never on where an
+ * image is loaded from: every picture in a chat-list row is a profile photo, whatever its address.
+ *
+ *   chat row  ─┬─ photo
+ *              └─ text ─┬─ line 1: <span title="Contact name">   time
+ *                       └─ line 2: <span title="Last message">   unread badge
+ *
+ * A titled span whose ancestor follows a sibling that also holds a titled span is on line 2: the
+ * preview. Every other titled span in the row is the name. Times and unread badges have no title,
+ * so they stay readable.
+ *
+ * Targets sit inside :where() so all blur rules share one specificity (0,2,1); reveal rules add
+ * :hover and always win.
+ */
+
+html {
+  --frost-chat: 12px;
+  --frost-text: 6px;
+  --frost-media: 14px;
+  --frost-gray: 0;
+  --frost-reveal-delay: 250ms;
+  --frost-fade: 0.12s;
+}
+html[data-frost-gray] {
+  --frost-gray: 1;
+}
+
+/* ── Text ─────────────────────────────────────────────────────────────────── */
+
+html[data-frost][data-frost-names]
+  :where(
+    #app :is([role='listitem'], [role='row']):not(#main *)
+      span[title]:not(:is([role='listitem'], [role='row']) *:has(span[title]) + * span[title])
+  ),
+html[data-frost][data-frost-previews]
+  :where(#app :is([role='listitem'], [role='row']):not(#main *) *:has(span[title]) + * span[title]),
+html[data-frost][data-frost-header] :where(#main header :is(span[title], span[dir='auto'])),
+html[data-frost][data-frost-messages] :where(#main :is([role='row'], .message-in, .message-out)),
+html[data-frost][data-frost-input] :where(#main footer [contenteditable='true']) {
+  filter: blur(var(--frost-text)) !important;
+  transition: filter var(--frost-fade) ease-out 0s !important;
+}
+
+/* ── Photos ───────────────────────────────────────────────────────────────── */
+
+html[data-frost][data-frost-avatars]
+  :where(
+    #app :is([role='listitem'], [role='row']):not(#main *)
+      :is(img:not([data-plain-text], .emoji), svg:has(image), [style*='background-image']),
+    #app :is(img[src*='pps.whatsapp.net'], img[src*='cdn.whatsapp.net']),
+    #main header img
+  ),
+html[data-frost][data-frost-media]
+  :where(
+    #main :is(video, canvas, img:not([data-plain-text], .emoji), [style*='background-image']),
+    #app :is(img[src^='blob:'], video)
+  ) {
+  filter: blur(var(--frost-media)) grayscale(var(--frost-gray)) !important;
+  transition: filter var(--frost-fade) ease-out 0s !important;
+}
+
+/* ── Reveal on hover ──────────────────────────────────────────────────────────
+   Hovering one chat, the header, one message or the typing box reveals just that, after the
+   chosen delay, so a mouse passing over the list does not flash every chat. */
+
+html[data-frost][data-frost-hover] :where(#app :is([role='listitem'], [role='row']):not(#main *)):hover :where(*),
+html[data-frost][data-frost-hover] :where(#main header):hover :where(*),
+html[data-frost][data-frost-hover] :where(#main :is([role='row'], .message-in, .message-out)):hover,
+html[data-frost][data-frost-hover] :where(#main :is([role='row'], .message-in, .message-out)):hover :where(*),
+html[data-frost][data-frost-hover] :where(#main footer):hover :where([contenteditable='true']),
+html[data-frost][data-frost-hover] :where(#app img[src*='pps.whatsapp.net']):hover {
+  filter: none !important;
+  transition-delay: var(--frost-reveal-delay) !important;
+}
+
+/* ── The open chat ────────────────────────────────────────────────────────────
+   The conversation panel (#main) stays blurred until you click it or start typing. "Shown" is a
+   marker frost.js puts on #main itself, so a chat opened in a fresh panel starts blurred before
+   it is ever painted. Opening another chat from the list removes the marker. */
+
+html[data-frost][data-frost-chat] #main:not([data-frost-shown]) > * {
+  filter: blur(var(--frost-chat)) !important;
+  transition: filter var(--frost-fade) ease-out 0s !important;
+}
+html[data-frost][data-frost-chat] #main:not([data-frost-shown]) > :not(footer) {
+  cursor: pointer !important;
+}
+
+/* ── Hide the whole window ────────────────────────────────────────────────────
+   data-frost-hide = manual (Alt+X), away (WhatsApp not in front) or idle. Everything in the page
+   is blurred and a click anywhere brings it back. */
+
+html:not([data-frost-ready]) #app {
+  visibility: hidden !important; /* the few ms before settings are read */
+}
+
+html[data-frost-hide] body > * {
+  filter: blur(28px) grayscale(1) !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  transition: filter var(--frost-fade) ease-out !important;
+}
+
+html[data-frost-hide] body::before {
+  content: '' !important;
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 2147483646 !important;
+  cursor: pointer !important;
+  background: rgba(238, 243, 247, 0.3) !important;
+}
+
+html[data-frost-hide] body::after {
+  content: 'Hidden · click to show' !important;
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 2147483647 !important;
+  padding: 9px 16px !important;
+  border: 1px solid #a9bccb !important;
+  border-radius: 999px !important;
+  background: #fafcfe !important;
+  color: #13202b !important;
+  font: 500 13px/1.3 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
+html[data-frost-hide='away'] body::after {
+  content: 'Hidden while WhatsApp is in the background' !important;
+}
+html[data-frost-hide='idle'] body::after {
+  content: 'Hidden after inactivity · click to show' !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-frost-hide] body::before {
+    background: rgba(13, 20, 27, 0.35) !important;
+  }
+  html[data-frost-hide] body::after {
+    border-color: #3a4e60 !important;
+    background: #131c25 !important;
+    color: #e3edf4 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    --frost-fade: 0s;
+  }
+}

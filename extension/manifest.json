@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "Frost — blur for WhatsApp Web",
+  "short_name": "Frost",
+  "version": "1.1.1",
+  "description": "Blur names, photos, previews and messages on WhatsApp Web with adjustable strength. Pure CSS, runs entirely on this computer.",
+  "minimum_chrome_version": "111",
+
+  "permissions": ["storage"],
+
+  "background": {
+    "service_worker": "src/background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["src/shared/settings.js", "src/content/frost.js"],
+      "css": ["src/content/frost.css"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png"
+    }
+  },
+
+  "options_ui": {
+    "page": "src/options/options.html",
+    "open_in_tab": true
+  },
+
+  "commands": {
+    "toggle-blur": {
+      "description": "Turn blurring on or off",
+      "suggested_key": { "default": "Alt+Z" }
+    },
+    "hide-window": {
+      "description": "Hide or show the whole WhatsApp window",
+      "suggested_key": { "default": "Alt+X" }
+    }
+  },
+
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+  }
+}
