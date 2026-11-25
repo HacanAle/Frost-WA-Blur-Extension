@@ -8,134 +8,167 @@
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
+    <div class="field" aria-hidden="true">
+      <span class="disc disc-a"></span>
+      <span class="disc disc-b"></span>
+      <span class="disc disc-c"></span>
+    </div>
+
     <main class="page">
       <header class="intro">
-        <h1>Frost settings</h1>
-        <p>Blurring and strength are in the toolbar popup. These are the rest.</p>
+        <img class="mark" src="../../icons/icon.svg" alt="" width="56" height="56" />
+        <div>
+          <h1>Frost</h1>
+          <p>Blurring and strength live in the toolbar popup. Everything else is here.</p>
+        </div>
+        <span class="version mono">v<span id="version"></span></span>
       </header>
 
-      <section class="block" aria-labelledby="chat-title">
-        <h2 id="chat-title">Open chat</h2>
-        <ul class="rows" id="chat-rows">
-          <li>
-            <div>
-              <label for="chatWindow">Blur the open chat</label>
-              <p class="sub">A chat you open stays blurred until you click it or start typing. Opening another chat blurs it again.</p>
-            </div>
-            <span class="switch"><input type="checkbox" id="chatWindow" /><span></span></span>
-          </li>
-          <li class="depends">
-            <div>
-              <label for="chatRehide">Blur it again after</label>
-              <p class="sub">No mouse or keyboard use inside the chat.</p>
-            </div>
-            <select id="chatRehide">
-              <option value="0">Never</option>
-              <option value="15">15 seconds</option>
-              <option value="30">30 seconds</option>
-              <option value="60">1 minute</option>
-              <option value="120">2 minutes</option>
-              <option value="300">5 minutes</option>
-            </select>
-          </li>
-          <li class="depends">
-            <div>
-              <label for="chatLeave">Blur it again when the mouse leaves it</label>
-              <p class="sub">Typing shows it again straight away.</p>
-            </div>
-            <span class="switch"><input type="checkbox" id="chatLeave" /><span></span></span>
-          </li>
-        </ul>
-      </section>
+      <div class="columns">
+        <div class="col">
+          <section class="glass panel" aria-labelledby="chat-title">
+            <h2 id="chat-title">Open chat</h2>
+            <ul class="rows" id="chat-rows">
+              <li>
+                <div>
+                  <label for="chatWindow">Blur the open chat</label>
+                  <p class="sub">A chat you open stays blurred until you click it or start typing. Opening another chat blurs it again.</p>
+                </div>
+                <span class="switch"><input type="checkbox" id="chatWindow" /><span></span></span>
+              </li>
+              <li class="depends">
+                <div>
+                  <label for="chatRehide">Blur it again after</label>
+                  <p class="sub">No mouse or keyboard use inside the chat.</p>
+                </div>
+                <span class="select">
+                  <select id="chatRehide">
+                    <option value="0">Never</option>
+                    <option value="15">15 seconds</option>
+                    <option value="30">30 seconds</option>
+                    <option value="60">1 minute</option>
+                    <option value="120">2 minutes</option>
+                    <option value="300">5 minutes</option>
+                  </select>
+                </span>
+              </li>
+              <li class="depends">
+                <div>
+                  <label for="chatLeave">Blur it again when the mouse leaves</label>
+                  <p class="sub">Typing shows it again straight away.</p>
+                </div>
+                <span class="switch"><input type="checkbox" id="chatLeave" /><span></span></span>
+              </li>
+            </ul>
+          </section>
 
-      <section class="block" aria-labelledby="reveal-title">
-        <h2 id="reveal-title">Blur and reveal</h2>
-        <ul class="rows">
-          <li>
-            <div>
-              <label for="hover">Reveal on hover</label>
-              <p class="sub">Point at one chat, message or the typing box to see it.</p>
-            </div>
-            <span class="switch"><input type="checkbox" id="hover" /><span></span></span>
-          </li>
-          <li>
-            <div>
-              <label for="grayscale">Black and white photos</label>
-              <p class="sub">Blurred photos lose their colour too, so faces are harder to make out.</p>
-            </div>
-            <span class="switch"><input type="checkbox" id="grayscale" /><span></span></span>
-          </li>
-          <li class="slider-row">
-            <div>
-              <label for="revealDelay">Delay before revealing</label>
-              <p class="sub">Stops a mouse passing over the chat list from flashing every chat.</p>
-            </div>
-            <div class="slider">
-              <input class="range" type="range" id="revealDelay" min="0" max="1500" step="50" />
-              <output class="mono" for="revealDelay" id="revealDelay-out"></output>
-            </div>
-          </li>
-        </ul>
-      </section>
-
-      <section class="block" aria-labelledby="hide-title">
-        <h2 id="hide-title">Hide the whole window</h2>
-        <p class="note">Blurs everything in WhatsApp Web until you click it. You can also do this any time from the popup or with the shortcut below.</p>
-        <ul class="rows">
-          <li>
-            <div>
-              <label for="away">When WhatsApp isn’t in front</label>
-              <p class="sub">You switch tab or app, or minimise Chrome. Also keeps tab previews and taskbar thumbnails blurred.</p>
-            </div>
-            <span class="switch"><input type="checkbox" id="away" /><span></span></span>
-          </li>
-          <li>
-            <div>
-              <label for="idle">After inactivity</label>
-              <p class="sub">No mouse or keyboard use in the WhatsApp tab.</p>
-            </div>
-            <select id="idle">
-              <option value="0">Never</option>
-              <option value="30">30 seconds</option>
-              <option value="60">1 minute</option>
-              <option value="120">2 minutes</option>
-              <option value="300">5 minutes</option>
-              <option value="600">10 minutes</option>
-            </select>
-          </li>
-        </ul>
-      </section>
-
-      <section class="block" aria-labelledby="keys-title">
-        <h2 id="keys-title">Keyboard shortcuts</h2>
-        <ul class="rows">
-          <li><span>Turn blurring on or off</span><span class="keys" id="k-toggle-blur"></span></li>
-          <li><span>Hide or show the whole window</span><span class="keys" id="k-hide-window"></span></li>
-        </ul>
-        <div class="actions">
-          <button type="button" class="btn" id="keys-change">Change shortcuts</button>
+          <section class="glass panel" aria-labelledby="reveal-title">
+            <h2 id="reveal-title">Blur and reveal</h2>
+            <ul class="rows">
+              <li>
+                <div>
+                  <label for="hover">Reveal on hover</label>
+                  <p class="sub">Point at one chat, message or the typing box to see it.</p>
+                </div>
+                <span class="switch"><input type="checkbox" id="hover" /><span></span></span>
+              </li>
+              <li>
+                <div>
+                  <label for="grayscale">Black and white photos</label>
+                  <p class="sub">Blurred photos lose their colour too, so faces are harder to make out.</p>
+                </div>
+                <span class="switch"><input type="checkbox" id="grayscale" /><span></span></span>
+              </li>
+              <li class="slider-row">
+                <div class="slider-head">
+                  <label for="revealDelay">Delay before revealing</label>
+                  <output class="mono" for="revealDelay" id="revealDelay-out"></output>
+                </div>
+                <input class="range" type="range" id="revealDelay" min="0" max="1500" step="50" />
+                <p class="sub">Stops a mouse passing over the chat list from flashing every chat.</p>
+              </li>
+            </ul>
+          </section>
         </div>
-      </section>
 
-      <section class="block" aria-labelledby="reset-title">
-        <h2 id="reset-title">Start over</h2>
-        <div class="actions">
-          <button type="button" class="btn" id="reset">Restore default settings</button>
-          <p class="feedback" id="reset-feedback" role="status" aria-live="polite"></p>
+        <div class="col">
+          <section class="glass panel" aria-labelledby="hide-title">
+            <h2 id="hide-title">Hide the whole window</h2>
+            <p class="note">Blurs everything in WhatsApp Web until you click it. Also from the popup, or with the shortcut below.</p>
+            <ul class="rows">
+              <li>
+                <div>
+                  <label for="away">When WhatsApp isn’t in front</label>
+                  <p class="sub">You switch tab or app, or minimise Chrome. Keeps tab previews and taskbar thumbnails blurred too.</p>
+                </div>
+                <span class="switch"><input type="checkbox" id="away" /><span></span></span>
+              </li>
+              <li>
+                <div>
+                  <label for="idle">After inactivity</label>
+                  <p class="sub">No mouse or keyboard use in the WhatsApp tab.</p>
+                </div>
+                <span class="select">
+                  <select id="idle">
+                    <option value="0">Never</option>
+                    <option value="30">30 seconds</option>
+                    <option value="60">1 minute</option>
+                    <option value="120">2 minutes</option>
+                    <option value="300">5 minutes</option>
+                    <option value="600">10 minutes</option>
+                  </select>
+                </span>
+              </li>
+            </ul>
+          </section>
+
+          <section class="glass panel" aria-labelledby="keys-title">
+            <div class="panel-head">
+              <h2 id="keys-title">Keyboard shortcuts</h2>
+              <button type="button" class="link" id="keys-change">Change</button>
+            </div>
+            <ul class="rows">
+              <li><span>Turn blurring on or off</span><span class="keys" id="k-toggle-blur"></span></li>
+              <li><span>Hide or show the whole window</span><span class="keys" id="k-hide-window"></span></li>
+            </ul>
+          </section>
+
+          <section class="glass panel" aria-labelledby="reset-title">
+            <h2 id="reset-title">Start over</h2>
+            <div class="actions">
+              <button type="button" class="btn" id="reset">Restore default settings</button>
+              <p class="feedback" id="reset-feedback" role="status" aria-live="polite"></p>
+            </div>
+          </section>
         </div>
-      </section>
+      </div>
 
-      <section class="block privacy" aria-labelledby="privacy-title">
+      <section class="glass panel privacy" aria-labelledby="privacy-title">
         <h2 id="privacy-title">What Frost touches</h2>
-        <ul>
+        <div class="facts">
+          <div class="fact">
+            <span class="fact-num">1</span>
+            <span class="fact-label">permission</span>
+            <span class="fact-sub">storage, nothing else</span>
+          </div>
+          <div class="fact">
+            <span class="fact-num">0</span>
+            <span class="fact-label">connections</span>
+            <span class="fact-sub">every request is blocked</span>
+          </div>
+          <div class="fact">
+            <span class="fact-num">0</span>
+            <span class="fact-label">messages read</span>
+            <span class="fact-sub">blur is plain CSS</span>
+          </div>
+        </div>
+        <ul class="points">
           <li>Only web.whatsapp.com, and only its look: blurring is plain CSS, switched on by attributes on the page’s root element and on the open chat panel.</li>
           <li>Frost’s scripts never read your chats, names or photos, and never run inside WhatsApp’s own code. They only notice where you click or type (in the open chat, or on a chat in the list) and count the chat rows, so the popup can warn you if WhatsApp changes its layout.</li>
           <li>No network access: the extension’s pages block every connection, and there is nothing to send to. Settings stay in this browser and are not synced.</li>
           <li>Blur is visual. It stops people reading over your shoulder; it does not encrypt anything.</li>
         </ul>
       </section>
-
-      <footer class="colophon">Frost <span class="mono" id="version"></span></footer>
     </main>
 
     <script src="../shared/settings.js"></script>

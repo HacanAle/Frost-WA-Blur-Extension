@@ -27,7 +27,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 
 async function updateBadge() {
   const settings = await load();
-  await chrome.action.setBadgeBackgroundColor({ color: '#6a6457' });
+  await chrome.action.setBadgeBackgroundColor({ color: '#0e4733' });
   await chrome.action.setBadgeText({ text: settings.enabled ? '' : 'off' });
 }
 

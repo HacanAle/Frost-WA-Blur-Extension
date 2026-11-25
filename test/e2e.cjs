@@ -99,6 +99,7 @@ function staticChecks() {
     channel: 'chromium',
     headless: !process.env.HEADED,
     viewport: { width: 1280, height: 760 },
+    deviceScaleFactor: SHOTS ? 2 : 1, // crisp README screenshots
     colorScheme: 'light',
     // Frost drops its fade under reduced motion, so computed styles settle at once.
     reducedMotion: 'reduce',
@@ -378,6 +379,27 @@ function staticChecks() {
     await until(async () => (await filterOf(NAME)) === 'blur(6px)', 'medium text');
   });
 
+  await check('strength dials pick which blur the slider moves', async () => {
+    await popup.click('.dial[data-dial="mediaBlur"]');
+    const state = await popup.evaluate(() => ({
+      visible: ['textBlur', 'mediaBlur', 'chatBlur'].filter((id) => !document.getElementById(id).hidden),
+      selected: document.querySelector('.dial[aria-selected="true"]').dataset.dial,
+      max: document.getElementById('slider-max').textContent,
+    }));
+    assert(JSON.stringify(state.visible) === '["mediaBlur"]', `visible: ${state.visible}`);
+    assert(state.selected === 'mediaBlur' && state.max === '40', JSON.stringify(state));
+    await popup.focus('.dial[data-dial="mediaBlur"]');
+    await popup.keyboard.press('ArrowRight');
+    assert(!(await popup.evaluate(() => document.getElementById('chatBlur').hidden)), 'arrow key did not move to Open chat');
+    await popup.click('.dial[data-dial="textBlur"]');
+    assert((await popup.evaluate(() => document.getElementById('slider-max').textContent)) === '20', 'text range');
+  });
+
+  await check('the popup fits Chrome\'s 600 px popup height', async () => {
+    const h = await popup.evaluate(() => Math.ceil(document.body.getBoundingClientRect().height));
+    assert(h <= 600, `popup is ${h}px tall`);
+  });
+
   await check('"Whole open chat" switch in the popup', async () => {
     await popup.click('label.lead');
     await until(async () => (await filterOf('#main > header')) === 'none', 'still blurred after switching off');
@@ -442,6 +464,23 @@ function staticChecks() {
     await worker.evaluate(() => chrome.storage.local.set({ hidden: false }));
     await until(async () => (await hideReason()) === null, 'not shown');
   }
+
+  await check('"Hide window" also covers modal dialogs in the top layer', async () => {
+    await wa.evaluate(() => {
+      const d = document.createElement('dialog');
+      d.id = 'frost-test-dialog';
+      d.append('Modal');
+      document.body.append(d);
+      d.showModal();
+    });
+    assert((await filterOf('#frost-test-dialog')) === 'none', 'dialog blurred while shown');
+    await worker.evaluate(() => chrome.storage.local.set({ hidden: true }));
+    await until(async () => (await hideReason()) === 'manual', 'not hidden');
+    assert((await filterOf('#frost-test-dialog')) === 'blur(28px) grayscale(1)', await filterOf('#frost-test-dialog'));
+    await wa.evaluate(() => document.getElementById('frost-test-dialog').remove());
+    await worker.evaluate(() => chrome.storage.local.set({ hidden: false }));
+    await until(async () => (await hideReason()) === null, 'not shown');
+  });
 
   await check('Esc shows the window, other keys never reach WhatsApp', async () => {
     await worker.evaluate(() => chrome.storage.local.set({ hidden: true }));

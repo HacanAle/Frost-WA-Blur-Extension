@@ -8,7 +8,8 @@
   </head>
   <body>
     <header class="head">
-      <div>
+      <img class="mark" src="../../icons/icon.svg" alt="" width="30" height="30" />
+      <div class="head-text">
         <h1>Frost</h1>
         <p class="status" id="status">Looking for WhatsApp Web…</p>
       </div>
@@ -18,72 +19,80 @@
       </label>
     </header>
 
-    <!-- A sample chat drawn with the same settings, so strength can be judged without WhatsApp open. -->
-    <section class="preview-wrap" aria-label="Preview">
-      <div class="preview" id="preview" title="Preview · hover to test reveal">
-        <div class="pv-photo" data-part="avatars">AJ</div>
-        <div class="pv-text">
-          <div class="pv-line">
-            <span class="pv-name" data-part="names">Alice Johnson</span>
-            <span class="pv-time">10:42</span>
-          </div>
-          <div class="pv-line">
-            <span class="pv-msg" data-part="previews">Running late, see you at 11</span>
-            <span class="pv-badge">2</span>
+    <main class="stack">
+      <!-- A sample chat drawn with the same settings, so strength can be judged without WhatsApp open. -->
+      <section class="glass card hero" aria-label="Preview">
+        <div class="preview" id="preview" title="Preview · hover to test reveal">
+          <div class="pv-photo" data-part="avatars">AJ</div>
+          <div class="pv-text">
+            <div class="pv-line">
+              <span class="pv-name" data-part="names">Alice Johnson</span>
+              <span class="pv-time">10:42</span>
+            </div>
+            <div class="pv-line">
+              <span class="pv-msg" data-part="previews">Running late, see you at 11</span>
+              <span class="pv-badge">2</span>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+        <label class="row lead">
+          <span>
+            <span class="lead-title">Whole open chat</span>
+            <span class="lead-sub">Shows when you click it or start typing</span>
+          </span>
+          <span class="switch"><input type="checkbox" data-key="chatWindow" /><span></span></span>
+        </label>
+      </section>
 
-    <section class="group" id="targets">
-      <h2>Blur</h2>
-      <label class="row lead">
-        <span>
-          <span class="lead-title">Whole open chat</span>
-          <span class="lead-sub">Shows when you click it or start typing</span>
-        </span>
-        <span class="switch"><input type="checkbox" data-key="chatWindow" /><span></span></span>
-      </label>
-      <div class="grid">
-        <label class="chip"><span>Chat names</span><span class="switch"><input type="checkbox" data-key="names" /><span></span></span></label>
-        <label class="chip"><span>Previews</span><span class="switch"><input type="checkbox" data-key="previews" /><span></span></span></label>
-        <label class="chip"><span>Profile photos</span><span class="switch"><input type="checkbox" data-key="avatars" /><span></span></span></label>
-        <label class="chip"><span>Chat header</span><span class="switch"><input type="checkbox" data-key="header" /><span></span></span></label>
-        <label class="chip"><span>Messages</span><span class="switch"><input type="checkbox" data-key="messages" /><span></span></span></label>
-        <label class="chip"><span>Photos &amp; videos</span><span class="switch"><input type="checkbox" data-key="media" /><span></span></span></label>
-        <label class="chip"><span>Typing box</span><span class="switch"><input type="checkbox" data-key="input" /><span></span></span></label>
-        <label class="chip"><span>Reveal on hover</span><span class="switch"><input type="checkbox" id="hover" /><span></span></span></label>
-      </div>
-    </section>
-
-    <section class="group" id="strength">
-      <div class="group-head">
-        <h2>Strength</h2>
-        <div class="seg" role="group" aria-label="Presets" id="presets">
-          <button type="button" data-preset="light">Light</button>
-          <button type="button" data-preset="medium">Medium</button>
-          <button type="button" data-preset="strong">Strong</button>
+      <section class="glass card" id="strength">
+        <div class="card-head">
+          <h2>Strength</h2>
+          <div class="seg" role="group" aria-label="Presets" id="presets">
+            <button type="button" data-preset="light">Light</button>
+            <button type="button" data-preset="medium">Medium</button>
+            <button type="button" data-preset="strong">Strong</button>
+          </div>
         </div>
-      </div>
-      <div class="slider">
-        <label for="textBlur">Text</label>
-        <input class="range" type="range" id="textBlur" min="1" max="20" step="1" />
-        <output class="mono" for="textBlur" id="textBlur-out"></output>
-      </div>
-      <div class="slider">
-        <label for="mediaBlur">Photos</label>
-        <input class="range" type="range" id="mediaBlur" min="2" max="40" step="1" />
-        <output class="mono" for="mediaBlur" id="mediaBlur-out"></output>
-      </div>
-      <div class="slider">
-        <label for="chatBlur">Open chat</label>
-        <input class="range" type="range" id="chatBlur" min="2" max="40" step="1" />
-        <output class="mono" for="chatBlur" id="chatBlur-out"></output>
-      </div>
-    </section>
+        <div class="dials" role="tablist" aria-label="Which blur to adjust">
+          <button type="button" class="dial" role="tab" data-dial="textBlur" aria-controls="textBlur">
+            <span class="dial-label">Text</span>
+            <output class="dial-value" for="textBlur" id="textBlur-out"></output>
+          </button>
+          <button type="button" class="dial" role="tab" data-dial="mediaBlur" aria-controls="mediaBlur">
+            <span class="dial-label">Photos</span>
+            <output class="dial-value" for="mediaBlur" id="mediaBlur-out"></output>
+          </button>
+          <button type="button" class="dial" role="tab" data-dial="chatBlur" aria-controls="chatBlur">
+            <span class="dial-label">Open chat</span>
+            <output class="dial-value" for="chatBlur" id="chatBlur-out"></output>
+          </button>
+        </div>
+        <div class="slider">
+          <span class="slider-end mono" id="slider-min"></span>
+          <input class="range" type="range" id="textBlur" min="1" max="20" step="1" aria-label="Text blur" />
+          <input class="range" type="range" id="mediaBlur" min="2" max="40" step="1" aria-label="Photo blur" hidden />
+          <input class="range" type="range" id="chatBlur" min="2" max="40" step="1" aria-label="Open chat blur" hidden />
+          <span class="slider-end mono" id="slider-max"></span>
+        </div>
+      </section>
+
+      <section class="targets" id="targets" aria-labelledby="targets-title">
+        <h2 id="targets-title">Blur</h2>
+        <div class="grid">
+          <label class="glass chip"><span>Chat names</span><span class="switch"><input type="checkbox" data-key="names" /><span></span></span></label>
+          <label class="glass chip"><span>Previews</span><span class="switch"><input type="checkbox" data-key="previews" /><span></span></span></label>
+          <label class="glass chip"><span>Profile photos</span><span class="switch"><input type="checkbox" data-key="avatars" /><span></span></span></label>
+          <label class="glass chip"><span>Chat header</span><span class="switch"><input type="checkbox" data-key="header" /><span></span></span></label>
+          <label class="glass chip"><span>Messages</span><span class="switch"><input type="checkbox" data-key="messages" /><span></span></span></label>
+          <label class="glass chip"><span>Photos &amp; videos</span><span class="switch"><input type="checkbox" data-key="media" /><span></span></span></label>
+          <label class="glass chip"><span>Typing box</span><span class="switch"><input type="checkbox" data-key="input" /><span></span></span></label>
+          <label class="glass chip"><span>Reveal on hover</span><span class="switch"><input type="checkbox" id="hover" /><span></span></span></label>
+        </div>
+      </section>
+    </main>
 
     <footer class="foot">
-      <button type="button" class="btn" id="hide">Hide window</button>
+      <button type="button" class="btn btn-accent" id="hide">Hide window</button>
       <span class="keys" id="hide-keys"></span>
       <button type="button" class="link" id="settings">More settings</button>
     </footer>

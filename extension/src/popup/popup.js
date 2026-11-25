@@ -6,7 +6,22 @@ const $ = (id) => document.getElementById(id);
 let settings = clean();
 let hidden = false;
 
+// The three strengths share one slider; the dial above it picks which one it moves.
+const SLIDERS = ['textBlur', 'mediaBlur', 'chatBlur'];
+let dial = 'textBlur';
+
 // ── Render ──
+
+function renderDial() {
+  for (const button of document.querySelectorAll('.dial')) {
+    const on = button.dataset.dial === dial;
+    button.setAttribute('aria-selected', String(on));
+    button.tabIndex = on ? 0 : -1;
+  }
+  for (const key of SLIDERS) $(key).hidden = key !== dial;
+  $('slider-min').textContent = $(dial).min;
+  $('slider-max').textContent = $(dial).max;
+}
 
 function fill(input) {
   const pct = ((input.value - input.min) / (input.max - input.min)) * 100;
@@ -33,12 +48,16 @@ function render() {
   for (const input of document.querySelectorAll('[data-key]')) input.checked = s[input.dataset.key];
   $('hover').checked = s.hoverReveal;
 
-  for (const key of ['textBlur', 'mediaBlur', 'chatBlur']) {
+  for (const key of SLIDERS) {
     const input = $(key);
     if (document.activeElement !== input) input.value = s[key];
-    $(`${key}-out`).textContent = `${s[key]} px`;
+    const unit = document.createElement('span');
+    unit.className = 'unit';
+    unit.textContent = ' px';
+    $(`${key}-out`).replaceChildren(String(s[key]), unit);
     fill(input);
   }
+  renderDial();
 
   for (const b of $('presets').querySelectorAll('button')) {
     const p = PRESETS[b.dataset.preset];
@@ -79,9 +98,24 @@ for (const input of document.querySelectorAll('[data-key]')) {
   input.addEventListener('change', () => queue({ [input.dataset.key]: input.checked }));
 }
 $('hover').addEventListener('change', (e) => queue({ hoverReveal: e.target.checked }));
-for (const key of ['textBlur', 'mediaBlur', 'chatBlur']) {
+for (const key of SLIDERS) {
   $(key).addEventListener('input', (e) => queue({ [key]: Number(e.target.value) }));
 }
+document.querySelector('.dials').addEventListener('click', (e) => {
+  const button = e.target.closest('.dial');
+  if (!button) return;
+  dial = button.dataset.dial;
+  renderDial();
+});
+// Arrow keys move between dials, as in any tab list.
+document.querySelector('.dials').addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  const step = e.key === 'ArrowRight' ? 1 : -1;
+  dial = SLIDERS[(SLIDERS.indexOf(dial) + step + SLIDERS.length) % SLIDERS.length];
+  renderDial();
+  document.querySelector(`.dial[data-dial="${dial}"]`).focus();
+  e.preventDefault();
+});
 $('presets').addEventListener('click', (e) => {
   const button = e.target.closest('button[data-preset]');
   if (button) queue(PRESETS[button.dataset.preset]);

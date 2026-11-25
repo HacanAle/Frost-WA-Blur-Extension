@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Frost — blur for WhatsApp Web",
   "short_name": "Frost",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Blur names, photos, previews and messages on WhatsApp Web with adjustable strength. Pure CSS, runs entirely on this computer.",
   "minimum_chrome_version": "111",
 

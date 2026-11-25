@@ -267,7 +267,9 @@
   // Counts chat rows so the popup can warn when WhatsApp changes its layout. Reads no content.
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (sender.id !== chrome.runtime.id || !message || message.type !== 'status') return false;
+    // Only Frost's own pages may ask (not a content script running in some web page).
+    const fromOwnPage = sender.id === chrome.runtime.id && String(sender.url || '').startsWith(chrome.runtime.getURL(''));
+    if (!fromOwnPage || !message || message.type !== 'status') return false;
     lastPopupPing = Date.now();
     const pane = document.getElementById('pane-side');
     const rows = pane ? pane.querySelectorAll('[role="listitem"]').length || pane.querySelectorAll('[role="row"]').length : 0;

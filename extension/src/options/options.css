@@ -1,97 +1,167 @@
 body {
   min-height: 100vh;
+  isolation: isolate;
 }
+
+/* ── The field: big flat discs fixed behind the page, frosted by every panel that crosses them ── */
+
+.field {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.disc {
+  position: absolute;
+  border-radius: 50%;
+}
+.disc-a {
+  width: 640px;
+  height: 640px;
+  top: -400px;
+  right: -230px;
+  background: linear-gradient(210deg, var(--field-deep-2), var(--field-deep) 65%);
+}
+.disc-b {
+  width: 560px;
+  height: 560px;
+  bottom: -220px;
+  left: -200px;
+  background: linear-gradient(40deg, var(--field-mid), var(--field-mid-2));
+}
+.disc-c {
+  width: 300px;
+  height: 300px;
+  top: 46%;
+  right: 8%;
+  background: linear-gradient(160deg, var(--field-mid-2), var(--field-mid));
+  opacity: 0.85;
+}
+
+/* ── Page ── */
 
 .page {
-  max-width: 620px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 48px 24px 64px;
+  padding: 56px 32px 72px;
 }
 
+.intro {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 32px;
+}
+.intro .mark {
+  flex: none;
+  display: block;
+  border-radius: 15px;
+  box-shadow: var(--glass-shadow);
+}
 .intro h1 {
-  font-size: 26px;
-  line-height: 1.2;
-  font-weight: 600;
-  letter-spacing: -0.015em;
+  font-size: 44px;
+  line-height: 1.05;
+  font-weight: 300;
+  letter-spacing: -0.03em;
 }
 .intro p {
-  margin-top: 6px;
+  margin-top: 4px;
+  color: var(--dim);
+}
+.version {
+  margin-left: auto;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--glass-edge);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--frost);
+  backdrop-filter: var(--frost);
+  font-size: 12px;
   color: var(--dim);
 }
 
-.block {
-  margin-top: 32px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-strong);
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: start;
 }
-.block h2 {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: -0.005em;
+.col {
+  display: grid;
+  gap: 16px;
+}
+
+/* ── Panels ── */
+
+.panel {
+  padding: 20px 22px 8px;
+}
+.panel h2 {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 .note {
-  margin-top: 6px;
+  margin-top: 4px;
   color: var(--dim);
   font-size: 13px;
-  max-width: 58ch;
 }
 
 .rows {
   list-style: none;
   margin-top: 10px;
-  border-top: 1px solid var(--border);
 }
 .rows li {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--border);
+  gap: 20px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
 }
 .rows label {
   cursor: pointer;
+  font-weight: 450;
 }
 .rows .sub {
-  margin-top: 1px;
+  margin-top: 2px;
   font-size: 12.5px;
+  line-height: 1.4;
   color: var(--faint);
-  max-width: 46ch;
 }
 .rows[data-inactive] li.slider-row,
 .rows[data-inactive] li.depends {
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
-.slider {
-  flex: none;
-  display: grid;
-  grid-template-columns: 150px 58px;
-  align-items: center;
-  gap: 10px;
+.rows li.slider-row {
+  display: block;
 }
-.slider output {
+.slider-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.slider-head output {
   font-size: 12.5px;
-  color: var(--dim);
-  text-align: right;
+  color: var(--accent-text);
 }
-
-select {
-  height: 34px;
-  padding: 0 6px 0 10px;
-  background: var(--surface);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  cursor: pointer;
-}
-select:focus-visible {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
+.slider-row .sub {
+  margin-top: 4px;
 }
 
 .keys {
   display: inline-flex;
+  flex: none;
   gap: 4px;
   font-size: 12.5px;
   color: var(--faint);
@@ -102,37 +172,85 @@ select:focus-visible {
   flex-wrap: wrap;
   align-items: center;
   gap: 14px;
-  margin-top: 14px;
+  margin: 14px 0 14px;
 }
 .feedback {
   font-size: 13px;
-  color: var(--dim);
+  color: var(--accent-text);
 }
 .feedback:empty {
   display: none;
 }
 
-.privacy ul {
-  margin-top: 8px;
-  padding-left: 18px;
-  color: var(--dim);
-  font-size: 13px;
-  max-width: 62ch;
-}
-.privacy li + li {
-  margin-top: 4px;
-}
+/* ── What Frost touches ── */
 
-.colophon {
-  margin-top: 40px;
+.privacy {
+  margin-top: 16px;
+  padding-bottom: 22px;
+}
+.facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px 15px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-edge);
+  background: var(--glass-strong);
+}
+.fact-num {
+  font-size: 46px;
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent-text);
+  font-variant-numeric: tabular-nums;
+}
+.fact-label {
+  margin-top: 6px;
+  font-weight: 500;
+}
+.fact-sub {
   font-size: 12.5px;
   color: var(--faint);
 }
+.points {
+  margin-top: 16px;
+  padding-left: 18px;
+  color: var(--dim);
+  font-size: 13px;
+  max-width: 78ch;
+}
+.points li + li {
+  margin-top: 5px;
+}
+.points li::marker {
+  color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (max-width: 560px) {
+  .page {
+    padding: 32px 16px 48px;
+  }
+  .intro h1 {
+    font-size: 34px;
+  }
   .rows li {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+  }
+  .facts {
+    grid-template-columns: 1fr;
   }
 }
