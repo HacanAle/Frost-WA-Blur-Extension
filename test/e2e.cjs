@@ -395,6 +395,12 @@ function staticChecks() {
     assert((await popup.evaluate(() => document.getElementById('slider-max').textContent)) === '20', 'text range');
   });
 
+  await check('nothing makes Chrome widen the popup past 360 px', async () => {
+    // Chrome sizes a popup to its content, overflow included: a decoration poking out widens it.
+    const w = await popup.evaluate(() => document.documentElement.scrollWidth);
+    assert(w <= 360, `content is ${w}px wide`);
+  });
+
   await check('the popup fits Chrome\'s 600 px popup height', async () => {
     const h = await popup.evaluate(() => Math.ceil(document.body.getBoundingClientRect().height));
     assert(h <= 600, `popup is ${h}px tall`);
